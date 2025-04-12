@@ -1,0 +1,11 @@
+\section{Background and Related Work}
+
+With the rapid development of highly parallel computing hardware, such as GPUs and accelerators, many classical computational algorithms must be reassessed. To fully exploit the computational power of modern architectures, algorithms need to consist of operations that are intrinsically parallel and require minimal inter-thread communication. This is crucial not only for achieving high performance, but also for reducing programming complexity in heterogeneous computing environments.
+
+Comparison-based methods, such as those based on tree structures (e.g., kD-trees, quadtrees), inherently rely on sequential logic and complex control flow. These algorithms typically scale as $\mathcal{O}(n \log n)$ due to their depth and branching nature. For example, in a quadtree, the height of the tree is $\mathcal{O}(\log n)$, and each operation requires traversing these levels, leading to logarithmic costs per operation.
+
+In contrast, hash-based algorithms offer a fundamentally different computational structure. Each operation (read or write) requires a fixed number of instructions and avoids tree traversal or comparisons, resulting in an optimal scaling of $\mathcal{O}(n)$. This makes hashing particularly suitable for modern HPC applications where memory bandwidth and inter-thread synchronization become performance bottlenecks.
+
+Moreover, as memory access costs have increasingly become the dominant factor in system performance—far outweighing arithmetic operation costs—techniques that minimize memory operations and leverage cache-locality become even more advantageous. Hashing, with its constant-time access pattern and avoidance of comparisons, aligns well with this architectural trend.
+
+While hashing is widely used in general computer science, its adoption in scientific computing, and particularly in mesh remapping, has been limited~\cite{Robey2013,Alcantara2009}. This work builds on prior explorations and provides a concrete, performance-focused implementation of hashing in mesh-to-mesh remapping contexts.

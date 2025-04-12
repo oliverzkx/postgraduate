@@ -1,0 +1,40 @@
+
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{natbib}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{margin=1in}
+
+\title{Report on Fast Mesh-to-Mesh Remaps Using Hash Algorithms}
+\author{Kaixiang Zou}
+\date{April 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This report presents a detailed study on fast mesh-to-mesh remapping algorithms based on hash structures. The remapping process is crucial in computational physics simulations, where data must be transferred between different spatial discretizations efficiently and accurately.
+
+We investigate several variants of hash-based methods, including hierarchical hash tables and memory-optimized strategies, as alternatives to traditional kD-tree-based approaches. The proposed techniques significantly reduce memory operations and enable rapid remapping for large-scale meshes.
+
+Experimental evaluations on 2-D mesh data demonstrate that the hash-based methods achieve up to two orders of magnitude speedup over classical techniques, with competitive accuracy. We further analyze their performance across serial CPU, multi-core CPU (OpenMP), and GPU (OpenCL) implementations, confirming their scalability and suitability for high-performance computing environments.
+
+
+\end{abstract}
+
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/methodology}
+\input{sections/experiments}
+\input{sections/discussion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

@@ -1,0 +1,11 @@
+\section{Introduction}
+
+In computational simulations, a mesh-to-mesh remap operation maps data from one mesh to another mesh that has the same geometry but potentially a different spatial decomposition. If the remap is fast enough, each physics package can be executed on the most appropriate mesh, minimizing numerical error without adding extra cells that do not contribute to simulation accuracy.
+
+For multi-physics simulations, the availability of a fast remap operation can transform the structure of the entire simulation code. It enables more modular workflows where different physical models can evolve independently on different meshes, and data can be exchanged efficiently via remapping. Even in single-physics applications, remapping plays a vital role in advection operations—one of the most numerically sensitive steps in simulation pipelines.
+
+In traditional approaches, remapping has been implemented using comparison-based methods like kD-trees or quadtrees. While effective, these structures scale as $\mathcal{O}(n \log n)$ due to their reliance on sorting and comparisons, and their tree-like control flow is often ill-suited for parallel hardware such as GPUs.
+
+This research explores an alternative direction using hashing algorithms for mesh remapping. Unlike comparison-based methods, hash-based techniques scale linearly $\mathcal{O}(n)$ in the best case and offer flat, branch-free control flow, which makes them highly suitable for massively parallel architectures.
+
+Our primary objective is to evaluate the performance impact and memory efficiency of various hash-based remapping strategies. We explore single-write, multi-write, and hierarchical hashing schemes and implement them across different architectures: serial CPUs, multi-core CPUs with OpenMP, and GPUs with OpenCL. Through empirical analysis on different mesh sizes and refinements, we aim to show that hashing is not only faster but also simpler to implement in modern HPC environments.
