@@ -1,0 +1,19 @@
+\section{Introduction}
+
+In recent years, Graphics Processing Units (GPUs) have become the backbone of modern high-performance computing (HPC) and artificial intelligence (AI) workloads. Their massive parallelism and high memory bandwidth make them especially well-suited for accelerating tasks such as training large language models (LLMs), image processing, and scientific simulations. With the exponential growth of LLMs, such as GPT-3 and Llama-2, the demand for more powerful and efficient GPU architectures continues to rise.
+
+To meet this demand, Nvidia has continuously released new GPU architectures every two years, with each generation introducing improvements in computational performance, memory hierarchy, and programmability. While previous architectures like Ampere and Ada Lovelace significantly advanced tensor core capabilities and data type support (e.g., FP16, TF32, BF16), the latest Hopper architecture represents a substantial leap forward in both hardware features and CUDA programming capabilities.
+
+The Hopper architecture introduces several key innovations\cite{luo2024hopper}, including:
+\begin{itemize}
+    \item \textbf{Fourth-generation Tensor Cores} with support for FP8 precision and warp-group level asynchronous instructions (wgmma),
+    \item \textbf{DPX instructions} for accelerating dynamic programming workloads,
+    \item \textbf{Distributed Shared Memory (DSM)} for direct SM-to-SM communication,
+    \item \textbf{Enhanced asynchronous execution mechanisms} through the Tensor Memory Accelerator (TMA).
+\end{itemize}
+
+Despite Nvidia's claims regarding Hopper’s performance, there remains limited public analysis on how these new features behave at the instruction level or under practical AI workloads. Most existing research focuses on earlier architectures such as Volta, Turing, and Ampere, leaving a gap in understanding Hopper's true capabilities.
+
+This report aims to bridge that gap by conducting a comprehensive benchmarking and analysis of the Hopper architecture. Our work consists of PTX-level microbenchmarks targeting memory latency, bandwidth, and tensor core instruction performance, as well as high-level evaluations of the Transformer Engine in real AI models such as Llama. We also investigate the practical impacts of DPX, asynchronous memory copy, and distributed shared memory in CUDA.
+
+By comparing Hopper with its predecessors (Ampere and Ada), this study seeks to provide valuable insights into the microarchitectural characteristics and real-world implications of Hopper’s innovations. The findings are expected to guide future CUDA optimization efforts and hardware-aware software design on next-generation Nvidia GPUs.

@@ -1,0 +1,18 @@
+\section{Background and Related Work}
+
+The evolution of Nvidia's GPU architectures has significantly shaped the development of high-performance computing (HPC) and deep learning workloads. Over the past decade, a large body of research has focused on understanding the microarchitectural details of GPUs through reverse engineering, PTX-level benchmarking, and performance profiling.
+
+Early microbenchmarking efforts on architectures such as Volta and Turing\cite{jia2018dissecting, sun2020turing} provided key insights into instruction throughput, memory hierarchy behavior, and register file organization. These studies, including the works of Jia et al. (2018) and Sun et al. (2020), have helped developers and researchers better understand performance bottlenecks and low-level optimization opportunities in Nvidia GPUs. Ampere architecture introduced new data types (e.g., TF32) and improved Tensor Core designs, which were also extensively analyzed to quantify their peak efficiency and instruction latency.
+
+However, the recently released Hopper architecture has not yet been thoroughly studied. Hopper introduces several novel features that deviate from previous designs, such as:
+\begin{itemize}
+    \item \textbf{Warp-group matrix-matrix multiplication (wgmma)}: enabling asynchronous execution at warp-group level,
+    \item \textbf{FP8 Tensor Cores}: supporting high-performance low-precision arithmetic,
+    \item \textbf{DPX instructions}: dedicated to dynamic programming acceleration,
+    \item \textbf{Distributed Shared Memory (DSM)}: allowing direct SM-to-SM data exchange,
+    \item \textbf{Tensor Memory Accelerator (TMA)}: enhancing memory-copy overlap and data reuse.
+\end{itemize}
+
+To date, most public analyses of Hopper remain at a high level, primarily based on whitepapers or vendor presentations. There is a lack of instruction-level empirical studies that systematically examine Hopper's performance and behavior under different workloads.
+
+This gap highlights the need for a comprehensive benchmarking effort that dissects Hopper's architecture through PTX-level microbenchmarks and real AI model testing. Our work builds upon prior microarchitectural research while focusing specifically on evaluating the new capabilities introduced in Hopper. By comparing Hopper with Ampere (A100) and Ada (RTX 4090), we aim to uncover its architectural advantages and provide practical optimization insights for CUDA developers.

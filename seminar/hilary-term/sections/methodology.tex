@@ -1,0 +1,42 @@
+\section{Microbenchmarking Methodology}
+
+This section introduces the methodology used to evaluate the microarchitectural characteristics of the Nvidia Hopper GPU. We designed low-level microbenchmarks using PTX and CUDA\cite{jia2018dissecting} to test various aspects of the architecture, including memory hierarchy performance, tensor core instruction latency, and new features such as DPX, asynchronous memory operations, and distributed shared memory (DSM).
+
+\subsection{Memory Latency and Throughput}
+
+To assess memory latency and bandwidth, we tested three primary memory types:
+
+\begin{itemize}
+    \item \textbf{L1 Cache}: We accessed L1 memory using the `ld.global.ca` PTX modifier with a single thread to measure latency. For throughput, 1024 threads repeatedly accessed L1 and the total bandwidth was calculated from the data volume and kernel duration.
+    \item \textbf{L2 Cache}: We forced accesses to L2 using the `ld.global.cg` modifier. Latency was measured with serialized access from one thread; throughput was obtained using multiple thread blocks accessing different addresses.
+    \item \textbf{Shared Memory}: We tested shared memory latency with a single thread and measured bandwidth using 1024 threads concurrently accessing shared memory.
+\end{itemize}
+
+All tests were repeated across three GPUs: RTX 4090 (Ada), A100 (Ampere), and H800 (Hopper).
+
+\subsection{Tensor Core Latency and Throughput}
+
+To evaluate Tensor Core performance, we tested both the legacy `mma` (synchronous) and the new `wgmma` (asynchronous warp-group matrix multiplication) instructions.
+
+\begin{itemize}
+    \item \textbf{Latency}: Defined as the number of clock cycles between issuing a tensor core instruction and completing execution. We used CUDA's inline PTX and hardware timers to measure latency on Volta-style `mma` and Hopper-specific `wgmma`.
+    \item \textbf{Throughput}: Measured as the total operations per second (OPS), computed from the number of fused multiply-add (FMA) instructions executed in a kernel.
+    \item \textbf{Data Types}: We benchmarked across multiple precisions, including FP16, TF32, and FP8, and evaluated both dense and sparse instructions.
+\end{itemize}
+
+The benchmarks were written with direct PTX embedding in CUDA kernels to ensure instruction-level control.
+
+\subsection{New CUDA Features Evaluation}
+
+Hopper introduces several novel programming features that require dedicated benchmarking:
+
+\begin{itemize}
+    \item \textbf{Dynamic Programming Extensions (DPX)}: We evaluated DPX by testing its latency and throughput for recurrence relations such as edit-distance. Performance was compared against naive CPU and GPU implementations.
+
+    \item \textbf{Asynchronous Memory Copy}: Using \texttt{cuda::memcpy\_async}, we compared two data movement strategies: SyncShare (synchronous copy + compute) and AsyncPipe (overlapped data movement and compute). The kernel structure was designed to quantify overlap efficiency.
+
+    \item \textbf{Distributed Shared Memory (DSM)}: We tested DSM performance by enabling direct shared memory access between thread blocks on separate SMs, using the \texttt{clusterDim} and \texttt{cudaMemPool} features. Latency and bandwidth were measured under varying block sizes.
+\end{itemize}
+
+
+Together, these benchmarks provide a comprehensive, low-level view of Hopper’s core capabilities and highlight the performance impact of its new architectural features.

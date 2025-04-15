@@ -1,0 +1,34 @@
+
+\documentclass[12pt]{article}
+\input{preamble/preamble.tex}
+
+\title{Benchmarking and Dissecting the Nvidia Hopper GPU Architecture}
+\author{Kaixiang Zou}
+\date{April 2025}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Graphics Processing Units (GPUs) play a vital role in accelerating modern AI and HPC workloads. With the emergence of Nvidia's Hopper architecture, several novel features such as FP8 support, DPX instructions, asynchronous memory operations, and distributed shared memory (DSM) have been introduced. However, the microarchitectural details and actual performance benefits of these features remain largely unexplored. 
+
+This report conducts a comprehensive benchmarking study across Ampere, Ada, and Hopper GPUs using PTX-level microbenchmarks and Transformer Engine tests. We analyze instruction latency and throughput for various memory hierarchies and Tensor Core instructions, focusing on the newly introduced wgmma operations in Hopper. Additionally, we evaluate FP8 performance in large-scale transformer models and benchmark DPX, DSM, and async copy pipelines.
+
+Our findings reveal that Hopper achieves up to 2.6× L2 cache bandwidth over previous generations and that FP8-based wgmma instructions can deliver >90\% peak throughput under proper configurations. This study offers valuable insights for developers optimizing CUDA programs on Hopper and contributes to understanding the trade-offs in next-generation GPU designs.
+\end{abstract}
+
+
+\tableofcontents
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/methodology}
+\input{sections/results}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

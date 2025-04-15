@@ -1,0 +1,20 @@
+\section{Conclusion and Future Work}
+
+This report presented a detailed benchmarking and analysis of Nvidia's Hopper GPU\cite{luo2024hopper} architecture, focusing on its novel hardware features and programming capabilities. We evaluated Hopper (H800) in comparison to Ampere (A100) and Ada Lovelace (RTX 4090) across multiple dimensions, including memory performance, Tensor Core throughput, and new CUDA features such as DPX, asynchronous memory copy, and distributed shared memory (DSM).
+
+Our instruction-level microbenchmarks revealed that Hopper delivers significant improvements in L2 cache throughput, FP8 Tensor Core operations, and dynamic programming acceleration. The introduction of wgmma instructions and support for warp-group asynchronous execution enable Hopper to achieve over 90\% of its theoretical peak in FP8 workloads. Additionally, the Transformer Engine shows notable inference speedups on large-scale models like Llama when using FP8 precision.
+
+We also observed that Hopper benefits more than its predecessors from asynchronous execution pipelines and DSM. These features enhance programmability and open new directions for parallel kernel design and inter-block communication.
+
+\subsection{Future Work}
+
+While this study provides valuable insights into Hopper’s architecture, several opportunities remain for future research:
+
+\begin{itemize}
+    \item \textbf{Real-world HPC Applications:} Benchmarking Hopper under full-scale HPC workloads such as fluid dynamics, climate modeling, or graph processing would provide a broader view of its effectiveness beyond AI tasks.
+    \item \textbf{Energy Efficiency Analysis:} A deeper investigation into power consumption, thermal scaling, and performance-per-watt metrics could help quantify trade-offs in deploying Hopper for datacenter-scale workloads.
+    \item \textbf{Multi-GPU Communication:} Exploring DSM and asynchronous features in multi-GPU environments, especially in combination with NVLink and NCCL, could offer insights into future distributed system designs.
+    \item \textbf{Compiler and Toolchain Integration:} Investigating how Hopper’s new instructions can be better exposed via high-level languages and auto-tuning frameworks would enhance accessibility for a broader developer audience.
+\end{itemize}
+
+Overall, Hopper represents a significant step forward in GPU design tailored to modern AI workloads. This report serves as a foundational study for future optimization and architecture-aware programming on next-generation Nvidia GPUs.

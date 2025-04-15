@@ -1,0 +1,32 @@
+\section{Discussion}
+
+The benchmarking results reveal several key insights into the architectural advancements and performance behavior of Nvidia's Hopper GPU, as well as its comparison with previous architectures such as Ampere and Ada.
+
+\subsection{Memory Hierarchy Improvements}
+
+Hopper demonstrates substantial improvements in memory bandwidth, particularly in L2 cache throughput. Our experiments show that the H800 achieves more than 2.6× L2 bandwidth compared to the A100, and significantly outperforms the RTX 4090 as well. This can be attributed to enhancements in cache hierarchy design, more efficient prefetching mechanisms, and higher memory bus width enabled by HBM3.
+
+However, the latency improvements are less uniform. While L1 and shared memory latencies remain comparable to previous architectures, L2 cache shows a modest reduction in latency on Hopper. This indicates that although Hopper provides better memory throughput, latency-sensitive applications may not always benefit proportionally.
+
+\subsection{Tensor Core Performance with FP8 and wgmma}
+
+The introduction of warp-group matrix multiply-accumulate (wgmma) instructions and support for FP8 precision represents one of the most impactful upgrades in Hopper. Our results show that Hopper achieves high throughput with FP8 tensor operations, reaching over 90\% of its theoretical peak under dense matrix settings. Compared to previous generations, this allows for more compute-efficient execution of AI workloads that tolerate reduced precision.
+
+That said, FP16 and TF32 still yield better absolute performance on RTX 4090 for certain sparse workloads, suggesting that FP8 gains depend on the suitability of data and kernel configuration. Additionally, wgmma introduces complexity in kernel design due to warp-group constraints, which may increase programming effort.
+
+\subsection{Effectiveness of CUDA New Features}
+
+Three notable programming features—DPX, asynchronous memory copy, and DSM—offer promising improvements:
+
+\begin{itemize}
+    \item \textbf{DPX instructions} enable hardware-accelerated dynamic programming algorithms. We observe notable speedups in tasks like edit-distance computation, especially compared to conventional GPU code.
+    \item \textbf{AsyncPipe (asynchronous memory copy + computation)} allows better overlap between data transfer and execution. The H800 benefits significantly from this pipeline in small to medium workloads, while A100 shows minimal gains—likely due to hardware support limitations.
+    \item \textbf{DSM (Distributed Shared Memory)} introduces true SM-to-SM communication. While bandwidth is not drastically higher than shared memory, DSM simplifies data exchange patterns in distributed kernels and opens up new design possibilities.
+\end{itemize}
+
+\subsection{Broader Implications}
+
+Our findings suggest that Hopper is highly optimized for low-precision, AI-centric workloads. The FP8-focused transformer engine, improved Tensor Cores\cite{nvidia2023te}, and fast memory pathways align with current trends in large language model inference and training. However, these benefits may not fully translate to traditional HPC applications or workloads with strict precision requirements.
+
+Moreover, while features like DSM and DPX are architecturally innovative, they currently lack broad ecosystem-level software support, which could limit adoption. Continued efforts from both hardware and CUDA compiler/toolchain teams are essential to unlock their full potential.
+
