@@ -4,6 +4,7 @@
 
 ## Directory structure
 
+```
 Case_study_4/
  ├── 4_1_possion/        # Task 4.1 – assemble Ax = b for −Δu=f
  │   ├── main.cpp        # quick functional test: computes ‖Ax−b‖
@@ -22,6 +23,7 @@ Case_study_4/
  │   ├── Makefile
  │   └── report.md       # lab‑report template with results & discussion
  └── README.md           # this file
+```
 
 *All code is C++14 and depends only on [Eigen 3] for linear algebra.*
 
