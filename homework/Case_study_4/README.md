@@ -1,64 +1,91 @@
-# Case Study 4 – Multigrid Method (MAP55672, 2024‑25)
+# Case Study 4 – Multigrid Poisson Solver  
 
-This repository contains my complete solution to Case Study 4, which implements,
-tests, and analyses a recursive V‑cycle multigrid (MG) solver for the 2‑D
-Poisson problem on a unit square.
+*High‑Performance Computing · 2025 Spring*
+
+## Directory structure
+
+Case_study_4/
+ ├── 4_1_possion/        # Task 4.1 – assemble Ax = b for −Δu=f
+ │   ├── main.cpp        # quick functional test: computes ‖Ax−b‖
+ │   ├── poisson.{h,cpp} # 5‑point stencil + RHS generator
+ │   ├── Makefile
+ │   └── …
+ ├── 4_2_vcycle/         # Task 4.2 – recursive V‑cycle implementation
+ │   ├── main.cpp        # single‑cycle demo + residual print‑out
+ │   ├── mg.{h,cpp}      # multigrid core (smooth/restrict/prolong/solve)
+ │   ├── Makefile
+ │   └── vcycle_test     # binary after build
+ ├── 4_3_convergence/    # Task 4.3 – convergence & performance study
+ │   ├── main.cpp        # produces tables for sections 4.3‑1 & 4.3‑2
+ │   ├── poisson.{h,cpp} # local copy (avoids include clashes)
+ │   ├── mg.{h,cpp}      # identical to 4_2_vcycle/mg.*
+ │   ├── Makefile
+ │   └── report.md       # lab‑report template with results & discussion
+ └── README.md           # this file
+
+*All code is C++14 and depends only on [Eigen 3] for linear algebra.*
 
 ---
 
-## Directory layout
+## Quick start
 
-4_1_possion/        Poisson discretisation (five‑point stencil)
-4_2_vcycle/         Serial V‑cycle multigrid implementation + unit test
-4_3_convergence/    Convergence study driver, results, plotting script
-README.md           This file
-
----
-
-## Quick build & test
+### 1 · Build everything
 
 ```bash
-# 4.1 – build Poisson test
-cd 4_1_possion
-make               # produces ./poisson_test
-./poisson_test
-
-# 4.2 – build V‑cycle unit test
-cd ../4_2_vcycle
-make               # produces ./vcycle_test
-./vcycle_test
-
-# 4.3 – run convergence experiments
-cd ../4_3_convergence
-make               # produces ./mg_conv
-./mg_conv          # writes results.csv and prints summary
-python3 plot_mg.py # optional: generate iteration‑plots
+# from Case_study_4/
+make -C 4_1_possion
+make -C 4_2_vcycle
+make -C 4_3_convergence
 ```
 
-Eigen 3 (header‑only) must be available, e.g. `/usr/include/eigen3`.
+> Each sub‑directory has an independent Makefile, so you can also call
+>  `make` from inside the folder you want to test.
 
-## Key results 
+### 2 · Run the demos
 
-|    N | l<sub>max</sub> | V‑cycles | final residual |                       runtime (s) |
-| ---: | --------------: | -------: | -------------: | --------------------------------: |
-|   16 |               1 |       23 |    5.77 × 10⁻⁸ |                            0.0013 |
-|   16 |               1 |       23 |    5.77 × 10⁻⁸ | 0.0010  (re‑run, stability check) |
-|   32 |               1 |       26 |    6.04 × 10⁻⁸ |                            0.0085 |
-|   32 |               2 |       47 |    6.61 × 10⁻⁸ |                            0.0046 |
-|   64 |               1 |       30 |    6.52 × 10⁻⁸ |                             0.055 |
-|   64 |               3 |       91 |    9.83 × 10⁻⁸ |                             0.030 |
-|  128 |               1 |       33 |    6.50 × 10⁻⁸ |                              0.29 |
-|  128 |               4 |      177 |    9.20 × 10⁻⁸ |                              0.23 |
-|  256 |               1 |       36 |    4.57 × 10⁻⁸ |                              1.67 |
-|  256 |               5 |      339 |    9.43 × 10⁻⁸ |                              1.77 |
+| Task | Command                                          | What happens                                                 |
+| ---- | ------------------------------------------------ | ------------------------------------------------------------ |
+| 4.1  | `./4_1_possion/poisson_test` *(built by `make`)* | Prints ‖Ax − b‖ to verify assembly                           |
+| 4.2  | `./4_2_vcycle/vcycle_test`                       | Performs **one** V‑cycle on a 64 × 64 grid and reports the new residual |
+| 4.3  | `./4_3_convergence/convergence_runner`           | Generates Tables 4.3‑1 & 4.3‑2 (iteration, residual, runtime) |
 
-**Best practice** – For grids up to *N = 256* a 2‑ or 3‑level V‑cycle
-(coarsest grid ≈ 16×16) minimises wall‑clock time while still meeting the
-10⁻⁷ residual tolerance.
 
-## Build details
 
-- **Compiler** : g++‑11 (`-O2 -std=c++14`)
-- **Dependencies** : Eigen 3 only (no external libraries)
-- **Makefiles** : one per sub‑directory, no CMake required
-- **Tested on** : Ubuntu 22.04 and WSL Ubuntu 20.04
+Typical output for Task 4.3:
+
+```
+#  N  scheme  lmax  iters  residual  time[s]
+16  2‑level  1  23  5.77e‑08  0.0012
+...
+256  max‑level  6  411  9.75e‑08  2.17
+```
+
+------
+
+## Files you should hand in
+
+| File / folder                      | Purpose                              |
+| ---------------------------------- | ------------------------------------ |
+| `4_1_possion/` *(full folder)*     | Source + Makefile for Task 4.1       |
+| `4_2_vcycle/` *(full folder)*      | Source + Makefile for Task 4.2       |
+| `4_3_convergence/` *(full folder)* | Source + Makefile + **`report.md`**  |
+| `README.md`                        | build & run instructions (this file) |
+
+------
+
+
+
+## Notes & troubleshooting
+
+- The code uses **in‑place Gauss–Seidel** as weighted Jacobi (ω = 2/3).
+   Adjust `omega` / `nu` in `mg.cpp` if you want different smoothers.
+
+- Eigen is included system‑wide (`-I/usr/include/eigen3`).
+   If Eigen lives elsewhere, change the include path in every Makefile:
+
+  ```
+  CXXFLAGS = -O2 -std=c++14 -I/path/to/eigen
+  ```
+
+- All grids are interior points only (Dirichlet BCs are implicit).
+   Grid size *N* means *N*×*N* unknowns.
